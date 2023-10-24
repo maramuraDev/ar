@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+   <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@300;400&family=Work+Sans:wght@200&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="./styles.css">
+</head>
+
+<body>
+  <a-scene device-orientation-permission-ui="enabled: false" vr-mode-ui="enabled: false">
+    <a-assets>
+      <video id="vid" src="./assets/sala360.mp4" muted autoplay ></video>
+
+   </a-assets>
+
+    <a-sky rotation="0 -90 0" src="#vid"></a-sky>
+    <a-camera look-controls="enabled: true"></a-camera>
+  </a-scene>
+    <div class="brand-logo block"></div>
+
+  <div id="app-container" class="video-experience">
+    <div class="background block"> </div>
+    <div class="brand-logo block"></div>
+    <h1 class="block">Descubre el nuevo <span>EX30</span></h1>
+    <div id="custom-modal" class="block">
+      <h2>Accede a la Experiencia Volvo</h2>
+      <p>Haz click en el boton para entrar, a la experiencia de video immersivo</p>
+      <button class="custom-button" onclick="requestPermission()">Entrar</button>
+    </div>
+  </div>
+
+
+  <script>
+    function requestPermission() {
+    
+      var splashScreen = document.getElementById('app-container');
+              splashScreen.classList.add('revealed');
+      if (typeof DeviceOrientationEvent.requestPermission === 'function') {
+        DeviceOrientationEvent.requestPermission()
+          .then(function (permissionState) {
+            if (permissionState === 'granted') {
+            
+
+
+              enableCameraControls();
+              closeCustomModal();
+            } else {
+              console.log('Permission denied. You won\'t be able to interact with the 360 video.');
+              // Perform actions on permission denied
+              closeCustomModal();
+            }
+          })
+          .catch(function (error) {
+            console.error(error);
+            closeCustomModal();
+          });
+      } else {
+        console.log('DeviceOrientationEvent.requestPermission is not supported in this browser.');
+      }
+    }
+
+    function enableCameraControls() {
+      var camera = document.querySelector('a-camera');
+      camera.setAttribute('look-controls', 'enabled: true');
+      var splashScreen = document.getElementById('app-container');
+              splashScreen.classList.add('revealed');
+    }
+
+    function closeCustomModal() {
+      var customModal = document.getElementById('custom-modal');
+      customModal.style.display = 'none';
+    }
+  </script>
+</body>
+
+</html>
